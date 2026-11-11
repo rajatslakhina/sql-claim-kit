@@ -1,0 +1,64 @@
+SQLClaimKit demo: checking what LLM answers say their SQL returns
+Each answer's SQL runs, on the data it shows, in a private in-memory SQLite database.
+
+[1] WHERE email = NULL, said to find the customers with no email
+    answer: wrong (1 claim checked, 0 hold, 1 wrong)
+      WRONG result: SELECT name FROM customers WHERE email = NULL; -> 2 rows: Ben, Chen [nullComparison]
+            `SELECT name FROM customers WHERE email = NULL;` returns no rows, not 2 rows: Ben, Chen (= NULL is never true; use IS NULL or IS NOT NULL).
+    feedback sent back to the model:
+      | Some of what your answer says about its SQL does not hold:
+      | - `SELECT name FROM customers WHERE email = NULL;` returns no rows, not 2 rows: Ben, Chen (= NULL is never true; use IS NULL or IS NOT NULL).
+      | Run each query on the data the answer shows, correct the output and every statement that depends on it, and keep the rest of the answer as it is.
+    rewrite: verified (1 claim checked, 1 hold)
+      ok    result: SELECT name FROM customers WHERE email IS NULL; -> 2 rows: Ben, Chen
+
+[2] A LEFT JOIN that is meant to keep every customer, filtered in WHERE
+    answer: wrong (1 claim checked, 0 hold, 1 wrong)
+      WRONG result: SELECT c.name, o.total FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHE ... -> 4 rows: (Asha, 120), (Ben, NULL), (Chen, 45), (Dara, NULL) [leftJoinFilter]
+            `SELECT c.name, o.total FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHE ...` returns 2 rows: (Asha, 120), (Chen, 45), not 4 rows: (Asha, 120), (Ben, NULL), (Chen, 45), (Dara, NULL) (a WHERE condition on the right table of a LEFT JOIN drops the rows with no match; move it into the ON clause).
+    rewrite: verified (1 claim checked, 1 hold)
+      ok    result: SELECT c.name, o.total FROM customers c LEFT JOIN orders o ON o.customer_id = c.id AND ... -> 4 rows: (Asha, 120), (Ben, NULL), (Chen, 45), (Dara, NULL)
+
+[3] NOT IN over a subquery that holds a NULL
+    answer: wrong (2 claims checked, 0 hold, 2 wrong)
+      WRONG rowCount: SELECT name FROM customers WHERE id NOT IN (SELECT referrer_id FROM customers) ORDER B ... -> 3 rows [notInNull]
+            `SELECT name FROM customers WHERE id NOT IN (SELECT referrer_id FROM customers) ORDER B ...` returns no rows, not 3 rows (NOT IN finds nothing when the list or subquery holds a NULL; use NOT EXISTS, or leave the NULLs out).
+      WRONG result: SELECT name FROM customers WHERE id NOT IN (SELECT referrer_id FROM customers) ORDER B ... -> 3 rows: Ben, Chen, Dara [notInNull]
+            `SELECT name FROM customers WHERE id NOT IN (SELECT referrer_id FROM customers) ORDER B ...` returns no rows, not 3 rows: Ben, Chen, Dara (NOT IN finds nothing when the list or subquery holds a NULL; use NOT EXISTS, or leave the NULLs out).
+    rewrite: verified (2 claims checked, 2 hold)
+      ok    rowCount: SELECT name FROM customers c WHERE NOT EXISTS (SELECT 1 FROM customers r WHERE r.refer ... -> 3 rows
+      ok    result: SELECT name FROM customers c WHERE NOT EXISTS (SELECT 1 FROM customers r WHERE r.refer ... -> 3 rows: Ben, Chen, Dara
+
+[4] COUNT(email) said to count every customer
+    answer: wrong (1 claim checked, 0 hold, 1 wrong)
+      WRONG value: SELECT COUNT(email) FROM customers; -> 4 [countColumn]
+            `SELECT COUNT(email) FROM customers;` gives 2, not 4 (COUNT(column) skips NULLs; COUNT(*) counts every row).
+    rewrite: verified (1 claim checked, 1 hold)
+      ok    value: SELECT COUNT(*) FROM customers; -> 4
+
+[5] 245 / 3 said to be 81.67: no engine named, then SQLite named
+    answer, no engine named: caution (1 claim checked, 0 hold, 1 to check)
+      check value: SELECT 245 / 3; -> 81.67 [engineDependent: integerDivision]
+            `SELECT 245 / 3;` gives 81 in SQLite, not 81.67; engines differ here (SQLite, PostgreSQL and SQL Server divide two integers as integers, while MySQL's / returns a decimal), so name the engine the answer is for.
+    answer, SQLite named: wrong (1 claim checked, 0 hold, 1 wrong)
+      WRONG value: SELECT 245 / 3; -> 81.67 [integerDivision]
+            `SELECT 245 / 3;` gives 81, not 81.67 (SQLite divides two integers as integers; make one side a real, as in 7 / 2.0).
+    rewrite: verified (1 claim checked, 1 hold)
+      ok    value: SELECT 245 / 3.0; -> 81.67
+
+[6] What is not checked: no schema, another engine, the sandbox's limits
+    a query with no tables shown: noClaims (no claims about SQL)
+    PostgreSQL named: unchecked (1 claim checked, 0 hold, 1 unchecked)
+      skip  value: SELECT 7 / 2; -> 3
+            `SELECT 7 / 2;` was not checked: the answer is about PostgreSQL, and the checker runs SQLite.
+    ATTACH and a query that never ends: unchecked (2 claims checked, 0 hold, 2 unchecked)
+      skip  value: SELECT count(*) FROM other.customers; -> 4
+            `SELECT count(*) FROM other.customers;` was not checked: ATTACH is not run by the checker.
+      skip  value: WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n) SELECT count(*) FROM n; -> 100
+            `WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n) SELECT count(*) FROM n;` was not checked: it ran past the checker's step budget.
+
+[7] A conversation: the same wrong claim after a correction was asked for
+    turn 1: 1 claim checked, 0 hold, 1 wrong
+    turn 2: 1 claim checked, 0 hold, 1 wrong, 1 repeated
+    note: SQL check: `SELECT name FROM customers WHERE email = NULL;` returns no rows, not 2 rows: Ben, Chen (= NULL is never true; use IS NULL or IS NOT NULL). Some of this was stated again after a correction was asked for.
+    ledger: 2 reviews, 2 claims, 2 flagged, 1 repeated

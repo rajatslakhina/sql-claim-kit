@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="258" viewBox="0 0 1180 258">
+<rect width="1180" height="258" rx="12" fill="#0b1120"/>
+<circle cx="24" cy="22" r="6" fill="#ef4444"/><circle cx="44" cy="22" r="6" fill="#f59e0b"/><circle cx="64" cy="22" r="6" fill="#22c55e"/>
+<text x="590.0" y="27" fill="#94a3b8" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle">build,&#160;tests,&#160;coverage&#160;and&#160;lint&#160;(real&#160;numbers&#160;from&#160;this&#160;run)</text>
+<text x="20" y="58" fill="#93c5fd" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">$&#160;swift&#160;build</text>
+<text x="20" y="76" fill="#e2e8f0" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">Build&#160;complete!&#160;(0&#160;warnings,&#160;0&#160;errors)&#160;&#160;&#160;&#160;Swift&#160;6.4.2,&#160;language&#160;mode&#160;6</text>
+<text x="20" y="94" fill="#93c5fd" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">$&#160;swift&#160;test&#160;--enable-code-coverage</text>
+<text x="20" y="112" fill="#e2e8f0" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">Executed&#160;32&#160;tests,&#160;with&#160;0&#160;failures&#160;(0&#160;unexpected)</text>
+<text x="20" y="130" fill="#93c5fd" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">$&#160;xcrun&#160;llvm-cov&#160;report&#160;...&#160;(library&#160;target,&#160;14&#160;files)</text>
+<text x="20" y="148" fill="#e2e8f0" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">TOTAL&#160;&#160;&#160;lines&#160;100.00%&#160;(1055/1055)&#160;&#160;&#160;functions&#160;100.00%&#160;(218/218)&#160;&#160;&#160;regions&#160;99.40%&#160;(667/671)</text>
+<text x="20" y="166" fill="#93c5fd" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">$&#160;swiftlint&#160;lint&#160;--strict</text>
+<text x="20" y="184" fill="#e2e8f0" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">Done&#160;linting!&#160;Found&#160;0&#160;violations,&#160;0&#160;serious&#160;in&#160;18&#160;files.</text>
+<text x="20" y="202" fill="#93c5fd" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">$&#160;swift&#160;run&#160;SQLClaimDemo&#160;&#160;&#160;(twice)</text>
+<text x="20" y="220" fill="#e2e8f0" font-family="Menlo, Monaco, monospace" font-size="12" text-anchor="start">7&#160;scenarios,&#160;the&#160;two&#160;runs&#160;byte-identical</text>
+</svg>

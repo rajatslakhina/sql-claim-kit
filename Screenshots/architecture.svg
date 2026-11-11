@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="560" viewBox="0 0 1180 560">
+<defs><marker id="a" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 z" fill="#64748b"/></marker></defs>
+<rect width="1180" height="560" rx="12" fill="#f8fafc"/>
+<text x="590.0" y="34" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" text-anchor="middle">SQLClaimKit&#160;&#8212;&#160;run&#160;the&#160;SQL&#160;an&#160;answer&#160;shows,&#160;on&#160;the&#160;data&#160;it&#160;shows</text>
+<rect x="30" y="70" width="240" height="110" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="150.0" y="94" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">Answer&#160;text</text>
+<text x="150.0" y="116" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">from&#160;ProviderGatewayKit's</text>
+<text x="150.0" y="134" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">LLMSession,&#160;before&#160;it&#160;is&#160;shown</text>
+<text x="150.0" y="152" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">sql&#160;blocks,&#160;tables,&#160;comments</text>
+<rect x="330" y="70" width="250" height="110" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+<text x="455.0" y="94" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLClaimReader</text>
+<text x="455.0" y="116" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">segments:&#160;prose&#160;/&#160;code&#160;/&#160;tables</text>
+<text x="455.0" y="134" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">statements&#160;(sqlite3_complete)</text>
+<text x="455.0" y="152" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">dialect:&#160;label,&#160;prose,&#160;syntax</text>
+<rect x="640" y="70" width="250" height="110" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+<text x="765.0" y="94" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLClaim</text>
+<text x="765.0" y="116" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">result&#160;·&#160;rowCount&#160;·&#160;value&#160;·&#160;runs</text>
+<text x="765.0" y="134" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">script&#160;up&#160;to&#160;the&#160;target</text>
+<text x="765.0" y="152" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">blockStart,&#160;dialect</text>
+<rect x="930" y="70" width="220" height="110" rx="10" fill="#f1f5f9" stroke="#334155" stroke-width="1.5"/>
+<text x="1040.0" y="94" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLPolicy</text>
+<text x="1040.0" y="116" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">.standard</text>
+<text x="1040.0" y="134" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">.lenient&#160;(stated&#160;only)</text>
+<text x="1040.0" y="152" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">.strict&#160;(rows&#160;in&#160;order)</text>
+<rect x="330" y="240" width="250" height="150" rx="10" fill="#fef9c3" stroke="#ca8a04" stroke-width="1.5"/>
+<text x="455.0" y="264" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLiteSandbox</text>
+<text x="455.0" y="286" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">fresh&#160;:memory:&#160;database&#160;per&#160;claim</text>
+<text x="455.0" y="304" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">ATTACH&#160;/&#160;PRAGMA&#160;/&#160;VACUUM&#160;refused</text>
+<text x="455.0" y="322" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">authorizer,&#160;no&#160;attached&#160;DBs</text>
+<text x="455.0" y="340" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">step&#160;budget,&#160;row&#160;cap</text>
+<text x="455.0" y="358" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">earlier&#160;blocks:&#160;shell-style</text>
+<rect x="640" y="240" width="250" height="150" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+<text x="765.0" y="264" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLEvaluator</text>
+<text x="765.0" y="286" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">compare&#160;rows&#160;(set&#160;or&#160;ordered)</text>
+<text x="765.0" y="304" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">2.50&#160;=&#160;2.5,&#160;true&#160;=&#160;1,&#160;NULL</text>
+<text x="765.0" y="322" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">Diagnosis&#160;names&#160;the&#160;slip</text>
+<text x="765.0" y="340" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">engine-dependent:&#160;caveat</text>
+<text x="765.0" y="358" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">no&#160;schema:&#160;unchecked</text>
+<rect x="930" y="240" width="220" height="150" rx="10" fill="#ffffff" stroke="#334155" stroke-width="1.5"/>
+<text x="1040.0" y="264" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLFinding</text>
+<text x="1040.0" y="286" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">exact&#160;·&#160;equivalent</text>
+<text x="1040.0" y="304" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">unchecked(reason)</text>
+<text x="1040.0" y="322" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">caveat(engine,&#160;order,&#160;LIMIT)</text>
+<text x="1040.0" y="340" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">wrong(slip):&#160;nullComparison,</text>
+<text x="1040.0" y="358" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">integerDivision,&#160;notInNull,&#160;…</text>
+<rect x="330" y="430" width="250" height="100" rx="10" fill="#ecfdf5" stroke="#16a34a" stroke-width="1.5"/>
+<text x="455.0" y="454" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLReport</text>
+<text x="455.0" y="476" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">verdict,&#160;summary</text>
+<text x="455.0" y="494" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">note&#160;for&#160;the&#160;reader</text>
+<text x="455.0" y="512" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">feedback&#160;for&#160;the&#160;model</text>
+<rect x="640" y="430" width="250" height="100" rx="10" fill="#ecfdf5" stroke="#16a34a" stroke-width="1.5"/>
+<text x="765.0" y="454" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">SQLLedger&#160;(actor)</text>
+<text x="765.0" y="476" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">one&#160;per&#160;conversation</text>
+<text x="765.0" y="494" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">marks&#160;a&#160;claim&#160;repeated</text>
+<text x="765.0" y="512" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">after&#160;a&#160;correction</text>
+<rect x="930" y="430" width="220" height="100" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+<text x="1040.0" y="454" fill="#0f172a" font-family="Helvetica, Arial, sans-serif" font-size="15" font-weight="bold" text-anchor="middle">ai-chat-app</text>
+<text x="1040.0" y="476" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">sqlCheck&#160;stage&#160;after</text>
+<text x="1040.0" y="494" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">tomlCheck:&#160;a&#160;note&#160;under</text>
+<text x="1040.0" y="512" fill="#334155" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle">the&#160;bubble,&#160;no&#160;refusal</text>
+<line x1="270" y1="125" x2="328" y2="125" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="580" y1="125" x2="638" y2="125" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="765" y1="180" x2="765" y2="238" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="765.0" y="203.0" fill="#64748b" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle">judge</text>
+<line x1="640" y1="315" x2="582" y2="315" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="611.0" y="309.0" fill="#64748b" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle">run&#160;script</text>
+<line x1="582" y1="345" x2="640" y2="345" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<text x="611.0" y="339.0" fill="#64748b" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle">rows&#160;/&#160;failure</text>
+<line x1="890" y1="315" x2="928" y2="315" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="1040" y1="390" x2="580" y2="480" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="580" y1="480" x2="638" y2="480" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="890" y1="480" x2="928" y2="480" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+<line x1="1040" y1="180" x2="890" y2="300" stroke="#64748b" stroke-width="1.6" marker-end="url(#a)"/>
+</svg>
