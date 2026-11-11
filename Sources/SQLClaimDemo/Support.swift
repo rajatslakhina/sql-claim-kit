@@ -25,6 +25,7 @@ enum Printer {
         case .unorderedLimit: "unorderedLimit"
         case .rowOrder: "rowOrder"
         case .otherSyntax: "otherSyntax"
+        case .doubleQuotedText: "doubleQuotedText"
         }
     }
 

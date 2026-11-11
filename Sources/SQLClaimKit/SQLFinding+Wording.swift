@@ -59,6 +59,10 @@ extension SQLFinding {
         case .rowOrder:
             return "\(subject) returns the rows shown in another order: \(actual); rows that tie on the ORDER BY "
                 + "columns can come back in any order."
+        case let .doubleQuotedText(name):
+            return "\(subject) uses \"\(name)\" as text, but double quotes mark a column name in SQL; this SQLite "
+                + "reads it as a missing column (some builds fall back to text, other engines do not), so write "
+                + "'\(name)'."
         case .otherSyntax:
             return "\(subject) does not parse in SQLite (\(detail)); if it is meant for another "
                 + "engine, name it."

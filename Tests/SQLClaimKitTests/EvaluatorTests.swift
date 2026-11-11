@@ -168,6 +168,23 @@ final class EvaluatorTests: XCTestCase {
         XCTAssertEqual(holds.summary, "1 claim checked, 1 hold")
     }
 
+    func testDoubleQuotedTextIsACaveatWhereSQLiteReadsItAsAName() throws {
+        let failure = SQLFailure.missingColumn("Ann")
+        XCTAssertEqual(SQLEvaluator.doubleQuotedText(failure, in: "SELECT id FROM t WHERE name = \"Ann\""), "Ann")
+        XCTAssertEqual(SQLEvaluator.doubleQuotedText(failure, in: "SELECT id FROM t WHERE name in (\"Ann\", 'B')"), "Ann")
+        XCTAssertNil(SQLEvaluator.doubleQuotedText(failure, in: "UPDATE t SET \"Ann\" = 1"), "a missing column, not text")
+        XCTAssertNil(SQLEvaluator.doubleQuotedText(.missingTable("Ann"), in: "SELECT 1 WHERE x = \"Ann\""))
+        let caveat = SQLFinding(claim: SQLClaim(kind: .value, script: [SQLStatement(text: "SELECT 1;", comments: [])],
+                                                target: 0, shown: .count(1)), outcome: .caveat(.doubleQuotedText("Ann")))
+        XCTAssertEqual(caveat.explanation, "`SELECT 1;` uses \"Ann\" as text, but double quotes mark a column name in "
+            + "SQL; this SQLite reads it as a missing column (some builds fall back to text, other engines do not), so "
+            + "write 'Ann'.")
+        // Whether this SQLite falls back to text decides which of the two outcomes comes back; both are honest.
+        let text = answer("SELECT id FROM users WHERE name = \"Ann\";  -- 1", "")
+        let outcome = try finding(text).outcome
+        XCTAssertTrue(outcome == .exact || outcome == .caveat(.doubleQuotedText("Ann")), "\(outcome)")
+    }
+
     func testDiagnosisLooksAtTheRightPlace() {
         let shape = SQLEvaluator.Shape(shown: 1, actual: 1, shownCells: [["2.5", "x"]], actualCells: [[.text("2"), .text("x")]])
         XCTAssertFalse(Diagnosis.integerShownAsDecimal(shape))

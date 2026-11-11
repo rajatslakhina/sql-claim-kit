@@ -31,8 +31,8 @@ this package does not judge it.
 | Claim | Where it comes from | Checked by |
 |---|---|---|
 | **result** | a markdown table, a psql-style box, or `sqlite3` list output right after a SQL block (one short line of prose may sit between them: "This returns:") | running the block's last query and comparing the rows |
-| **rowCount** | "returns 3 rows", "gives no rows", "(2 rows)" right after the block, or in a comment after a query | counting the rows |
-| **value** | a comment after a query: `-- 3.5`, `-- 'Ann'`, `-- NULL`, `-- 1 \| 'x'`, or anything after `returns`, `result:`, `=>`, `→` | running that statement |
+| **rowCount** | "returns 3 rows.", "gives no rows,", "(2 rows)" right after the block, or in a comment after a query; the count must end the phrase, so "one row per customer" and "2 rows for each team" are not counts | counting the rows |
+| **value** | a comment after a query made of literals only: `-- 3.5`, `-- 'Ann'`, `-- NULL`, `-- 1 \| 'x'`, optionally after `returns`, `result:`, `=>`, `→`; a comment in words (`-- returns the active users`, `-- ===== orders =====`) is not a value | running that statement |
 | **runs** | "This is valid SQL:", "this runs as is", "this fails with an error" next to a block; and, under `.standard`, every block with no other claim | running the block |
 
 The script for a claim is every SQL block up to and including the one it is about, so the schema shown first is
@@ -81,9 +81,10 @@ is a caveat when no engine is named ("if it is meant for another engine, name it
 | `columnCount` | the output shown has a different number of columns than the query returns |
 | `runs` | the SQL said to fail runs |
 
-Three caveats besides the engine: rows in another order where `ORDER BY` columns may tie (`rowOrder`), different
-rows from a `LIMIT` with no `ORDER BY` (`unorderedLimit`), and SQL SQLite cannot parse with no engine named
-(`otherSyntax`).
+Four caveats besides the engine: rows in another order where `ORDER BY` columns may tie (`rowOrder`), different
+rows from a `LIMIT` with no `ORDER BY` (`unorderedLimit`), SQL SQLite cannot parse with no engine named
+(`otherSyntax`), and text written in double quotes (`WHERE name = "Ann"`) that this SQLite reads as a missing
+column (`doubleQuotedText`; builds that fall back to reading it as text, such as macOS's, run it and do not flag it).
 
 ## The sandbox
 
@@ -160,9 +161,10 @@ conversation through a `SQLLedger` where the same wrong claim comes back. The fu
 ![tests](Screenshots/tests.svg)
 
 - `swift build`: 0 warnings, 0 errors (Swift 6.4.2, language mode 6).
-- `swift test --enable-code-coverage`: 32 tests, 0 failures.
-- `llvm-cov report` on the library: **100.00% of lines (1055) and functions (218)** in all 14 files; regions
-  99.40% (667/671). The missed regions are short-circuit arms in the wording and the value matcher;
+- `swift test --enable-code-coverage`: 34 tests, 0 failures. The same 34 pass on the iOS 27.2 simulator
+  (`xcodebuild test -scheme SQLClaimKit-Package`), whose SQLite is the one the app runs.
+- `llvm-cov report` on the library: **100.00% of lines (1066) and functions (218)** in all 14 files; regions
+  99.26% (673/678). The missed regions are short-circuit arms in the wording and the value matcher;
   [Screenshots/coverage.txt](Screenshots/coverage.txt) has the full report.
 - `swiftlint lint --strict`: 0 violations in 18 files, with the series' `.swiftlint.yml` unchanged. One
   `optional_data_string_conversion` is disabled on one line, with the reason beside it (SQLite hands TEXT back as
@@ -171,6 +173,14 @@ conversation through a `SQLLedger` where the same wrong claim comes back. The fu
   shell-style, the `VACUUM` keyword refusal removed, and the `= NULL` diagnosis disabled.
 - Results come from the system SQLite (3.54.0 on the Mac this was built on). Error messages are SQLite's own and
   can change between SQLite versions.
+
+## Changes
+
+- **1.1.0** (2026-11-11): a comment after a query is a value only when it is made of literals (1.0.0 also read
+  words after `returns`, so `-- returns the active users` was "wrong"); a row count must end its phrase (1.0.0 read
+  "one row per customer" as a count of 1); new caveat `doubleQuotedText`. Found by probing 1.0.0 with prose that
+  is not a claim, the same day it shipped. New public enum case, so a minor version.
+- **1.0.0** (2026-11-11): first release.
 
 ## Limits
 

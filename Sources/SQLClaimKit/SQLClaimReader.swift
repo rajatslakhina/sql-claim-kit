@@ -4,9 +4,10 @@ import Foundation
 ///
 /// - **result**: a markdown table, or a fenced output block (`text`, `output`, `console` or unlabeled),
 ///   right after a SQL block, with at most one short line of prose between them ("This returns:").
-/// - **rowCount**: "returns 3 rows" in the prose right after a SQL block.
-/// - **value**: a `--` comment after a query that gives a value: `-- 3.5`, `-- 'Ann'`, `-- NULL`, or any
-///   value after `returns`, `result:`, `=>` or `→`.
+/// - **rowCount**: "returns 3 rows." in the prose right after a SQL block, the count ending the phrase (so
+///   "one row per customer" and "2 rows for each team" are not counts).
+/// - **value**: a `--` comment after a query whose text is literals only: `-- 3.5`, `-- 'Ann'`, `-- NULL`,
+///   `-- 1 | 'x'`, optionally after `returns`, `result:`, `=>` or `→`. A comment in words is not a value.
 /// - **runs**: "this is valid SQL", "this runs", or "this fails"/"raises an error" next to a SQL block; and,
 ///   when `checksSQLBlocks` is on, every SQL block with no other claim about it, as SQL shown to run.
 ///
@@ -110,7 +111,7 @@ public struct SQLClaimReader: Sendable {
         if let prefix { text = String(text.dropFirst(prefix.count)).trimmingCharacters(in: .whitespaces) }
         if let count = rowCount(in: text) { return (.rowCount, .count(count)) }
         let cells = ShownTable.split(text)
-        guard prefix != nil || cells.allSatisfy(isLiteral) else { return nil }
+        guard cells.allSatisfy(isLiteral) else { return nil }
         return (.value, .table(ShownTable(header: nil, rows: [cells])))
     }
 
@@ -125,7 +126,8 @@ public struct SQLClaimReader: Sendable {
     // swiftlint:disable:next force_try
     static let rowCountPattern = try! NSRegularExpression(
         pattern: #"(?:\b(?:returns?|gives?|produces?|yields?|gets?)\s+(?:exactly\s+|only\s+|just\s+)?|^\(?)"#
-            + #"(\d+|no|zero|one|a single|two|three|four|five|six|seven|eight|nine|ten)\s+rows?\b"#,
+            + #"(\d+|no|zero|one|a single|two|three|four|five|six|seven|eight|nine|ten)\s+rows?\b"#
+            + #"(?=\s*(?:[.:;,)!]|$))"#,
         options: [.caseInsensitive]
     )
 

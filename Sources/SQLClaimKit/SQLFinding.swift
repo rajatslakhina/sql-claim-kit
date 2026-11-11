@@ -24,6 +24,9 @@ public struct SQLFinding: Sendable, Hashable {
         case rowOrder
         /// SQLite cannot parse it, and no engine is named, so another engine may accept it.
         case otherSyntax
+        /// Text written in double quotes (`"Ann"`), which SQL reads as a column name; whether SQLite falls back
+        /// to reading it as text depends on how SQLite was built, and other engines do not.
+        case doubleQuotedText(String)
     }
 
     public enum Slip: String, Sendable, Hashable, CaseIterable {

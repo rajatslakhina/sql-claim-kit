@@ -52,6 +52,8 @@ struct SQLEvaluator: Sendable {
         if claim.shown == .runs(false) {
             return SQLFinding(claim: claim, outcome: .exact, failure: failure)
         }
+        let quoted = Self.doubleQuotedText(failure, in: claim.statement)
+        if let quoted { return reported(SQLFinding(claim: claim, outcome: .caveat(.doubleQuotedText(quoted)))) }
         let slip: SQLFinding.Slip = switch failure {
         case .missingColumn: .missingColumn
         case .constraint: .constraint
@@ -62,6 +64,16 @@ struct SQLEvaluator: Sendable {
             return reported(SQLFinding(claim: claim, outcome: .caveat(.otherSyntax), failure: failure))
         }
         return SQLFinding(claim: claim, outcome: .wrong(slip), failure: failure)
+    }
+
+    /// The text of a double-quoted value (`= "Ann"`, `IN ("Ann"`, `LIKE "A%"`) that SQLite reported as a
+    /// missing column. Builds of SQLite that fall back to reading it as text never report it, so this is the
+    /// other builds' answer to the same SQL.
+    static func doubleQuotedText(_ failure: SQLFailure, in statement: String) -> String? {
+        guard case let .missingColumn(name) = failure else { return nil }
+        let quoted = NSRegularExpression.escapedPattern(for: "\"\(name)\"")
+        let pattern = #"(=|<>|!=|\bLIKE|\bIN\s*\()\s*"# + quoted
+        return statement.range(of: pattern, options: [.regularExpression, .caseInsensitive]) == nil ? nil : name
     }
 
     static func reason(_ failure: SQLFailure) -> String {

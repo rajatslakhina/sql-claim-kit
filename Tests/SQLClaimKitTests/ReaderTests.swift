@@ -76,7 +76,7 @@ final class ReaderTests: XCTestCase {
         let block = """
         ```sql
         SELECT 7 / 2;  -- 3.5
-        SELECT 'a' || 'b'; -- returns ab
+        SELECT 'a' || 'b'; -- returns 'ab'
         SELECT NULL; -- => NULL
         SELECT 1, 'x'; -- 1 | 'x'
         SELECT count(*) FROM (SELECT 1); -- (1 row)
@@ -86,7 +86,7 @@ final class ReaderTests: XCTestCase {
         """
         let claims = reader.claims(in: block)
         XCTAssertEqual(claims.map(\.kind), [.value, .value, .value, .value, .rowCount])
-        XCTAssertEqual(claims.map(\.claimed), ["3.5", "ab", "NULL", "(1, 'x')", "1 row"])
+        XCTAssertEqual(claims.map(\.claimed), ["3.5", "'ab'", "NULL", "(1, 'x')", "1 row"])
         XCTAssertEqual(claims.map(\.target), [0, 1, 2, 3, 4])
     }
 
@@ -110,6 +110,26 @@ final class ReaderTests: XCTestCase {
         XCTAssertEqual(SQLClaimReader(checksSQLBlocks: false).claims(in: notAboutIt), [])
         XCTAssertEqual(reader.claims(in: "```sql\n-- only a comment\n```"), [])
         XCTAssertEqual(reader.claims(in: "```sql\nCREATE TABLE t (a);\n```")[0].statement, "CREATE TABLE t (a);")
+    }
+
+    func testWordsAreNotValuesAndCountsMustEndThePhrase() {
+        let schema = "CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, active INTEGER);\n"
+        let prose = [
+            "```sql\n" + schema + "SELECT name FROM users WHERE active = 1; -- returns the active users\n```",
+            "```sql\n" + schema + "SELECT name FROM users;\n-- ===== orders =====\nSELECT 1;\n```",
+            "```sql\n" + schema + "SELECT count(*) FROM users; -- gives the total\n```",
+            "```sql\n" + schema + "SELECT name FROM users; -- -> sorted by id\n```",
+            "```sql\n" + schema + "SELECT name, active FROM users;\n```\nThis returns one row per customer.",
+            "```sql\n" + schema + "SELECT name FROM users;\n```\nThis returns a row for each active user.",
+            "```sql\n" + schema + "SELECT name FROM users;\n```\nIt returns 2 rows for the active ones if you filter."
+        ]
+        for text in prose {
+            XCTAssertEqual(reader.claims(in: text).map(\.kind), [.runs], text)
+        }
+        XCTAssertEqual(SQLClaimReader.rowCount(in: "This returns 2 rows: Ann and Cy"), 2)
+        XCTAssertEqual(SQLClaimReader.rowCount(in: "It gives no rows, because"), 0)
+        XCTAssertNil(SQLClaimReader.shownValue("Ann"))
+        XCTAssertNotNil(SQLClaimReader.shownValue("=> 'Ann'"))
     }
 
     func testQueriesAreRecognized() {
