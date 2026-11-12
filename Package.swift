@@ -14,14 +14,26 @@ let package = Package(
         .executable(name: "SQLClaimDemo", targets: ["SQLClaimDemo"])
     ],
     targets: [
-        .target(name: "SQLClaimKit"),
+        // Apple platforms import the SDK's `SQLite3` module; Linux links the system library through this one.
+        .systemLibrary(
+            name: "CSQLite",
+            path: "Sources/CSQLite",
+            providers: [.apt(["libsqlite3-dev"]), .yum(["sqlite-devel"])]
+        ),
+        .target(
+            name: "SQLClaimKit",
+            dependencies: [.target(name: "CSQLite", condition: .when(platforms: [.linux]))]
+        ),
         .executableTarget(
             name: "SQLClaimDemo",
             dependencies: ["SQLClaimKit"]
         ),
         .testTarget(
             name: "SQLClaimKitTests",
-            dependencies: ["SQLClaimKit"]
+            dependencies: [
+                "SQLClaimKit",
+                .target(name: "CSQLite", condition: .when(platforms: [.linux]))
+            ]
         )
     ],
     swiftLanguageModes: [.v6]

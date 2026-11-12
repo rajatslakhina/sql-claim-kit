@@ -1,5 +1,9 @@
 import Foundation
+#if canImport(SQLite3)
 import SQLite3
+#else
+import CSQLite
+#endif
 
 /// One statement of a SQL block, with the comments written after it.
 public struct SQLStatement: Sendable, Hashable {

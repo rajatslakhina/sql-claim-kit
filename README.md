@@ -105,7 +105,8 @@ keyword refusal: the authorizer still refused `VACUUM INTO` on its own.
 ```
 
 and `.product(name: "SQLClaimKit", package: "sql-claim-kit")` in your target. Swift 6, no dependencies beyond
-the system SQLite (`import SQLite3`). macOS 13, iOS 16, tvOS 16, watchOS 9.
+the system SQLite: Apple's `SQLite3` module on macOS 13, iOS 16, tvOS 16 and watchOS 9, and `libsqlite3` on
+Linux (install the headers first: `apt-get install libsqlite3-dev`, or `sqlite-devel` on Fedora/RHEL).
 
 ## Usage
 
@@ -171,11 +172,18 @@ conversation through a `SQLLedger` where the same wrong claim comes back. The fu
   UTF-8; a failable initializer would add a branch no value reaches).
 - Mutation checks, each mutant failing the suite (judged by exit status): earlier blocks no longer passed over
   shell-style, the `VACUUM` keyword refusal removed, and the `= NULL` diagnosis disabled.
+- Linux (1.1.1): `swift build` 0 warnings and the same 34 tests pass in the `swift:6.0` Docker image (Swift
+  6.0.3, Ubuntu 24.04, SQLite 3.45.1 from `libsqlite3-dev`); `swift run SQLClaimDemo` prints the same output as on
+  the Mac.
 - Results come from the system SQLite (3.54.0 on the Mac this was built on). Error messages are SQLite's own and
   can change between SQLite versions.
 
 ## Changes
 
+- **1.1.1** (2026-11-12): builds on Linux. 1.1.0 imported `SQLite3`, a module only Apple platforms have, so
+  `swift build` on Linux stopped at `no such module 'SQLite3'`. A `CSQLite` system-library target now links
+  `libsqlite3` on Linux only; Apple platforms still import `SQLite3`, so nothing changes there (same tests,
+  coverage and demo output).
 - **1.1.0** (2026-11-11): a comment after a query is a value only when it is made of literals (1.0.0 also read
   words after `returns`, so `-- returns the active users` was "wrong"); a row count must end its phrase (1.0.0 read
   "one row per customer" as a count of 1); new caveat `doubleQuotedText`. Found by probing 1.0.0 with prose that

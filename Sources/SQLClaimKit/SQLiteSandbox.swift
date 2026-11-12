@@ -1,4 +1,8 @@
+#if canImport(SQLite3)
 import SQLite3
+#else
+import CSQLite
+#endif
 
 /// Why a statement did not run to the end.
 public enum SQLFailure: Sendable, Hashable {
